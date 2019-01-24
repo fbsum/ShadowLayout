@@ -41,32 +41,43 @@ public class ShadowLayout extends FrameLayout {
     private Paint shadowPaint;
     private RectF shadowRect;
     private int shadowColor;
-    private int shadowRadius;
-    private int shadowCorner;
-    private int shadowLeftOffset;
-    private int shadowTopOffset;
-    private int shadowRightOffset;
-    private int shadowBottomOffset;
+    private boolean shadowAutoDarken;
+    private int shadowBlur;
+    private int shadowRound;
+    private int shadowOffsetLeft;
+    private int shadowOffsetTop;
+    private int shadowOffsetRight;
+    private int shadowOffsetBottom;
+    private int shadowOffsetDx;
+    private int shadowOffsetDy;
+    private int shadowPaintColor;
 
     private void init(@NonNull Context context, @Nullable AttributeSet attrs) {
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ShadowLayout);
         shadowColor = typedArray.getColor(R.styleable.ShadowLayout_sl_shadow_color, Color.parseColor(DEFAULT_SHADOW_COLOR));
-        shadowRadius = (int) typedArray.getDimension(R.styleable.ShadowLayout_sl_shadow_radius, dip2px(8));
-        shadowCorner = (int) typedArray.getDimension(R.styleable.ShadowLayout_sl_shadow_corner, dip2px(0));
-        shadowLeftOffset = (int) typedArray.getDimension(R.styleable.ShadowLayout_sl_shadow_left_offset, DEFAULT_SHADOW_OFFSET);
-        shadowTopOffset = (int) typedArray.getDimension(R.styleable.ShadowLayout_sl_shadow_top_offset, DEFAULT_SHADOW_OFFSET);
-        shadowRightOffset = (int) typedArray.getDimension(R.styleable.ShadowLayout_sl_shadow_right_offset, DEFAULT_SHADOW_OFFSET);
-        shadowBottomOffset = (int) typedArray.getDimension(R.styleable.ShadowLayout_sl_shadow_bottom_offset, DEFAULT_SHADOW_OFFSET);
+        shadowAutoDarken = typedArray.getBoolean(R.styleable.ShadowLayout_sl_shadow_auto_darken, true);
+        shadowBlur = (int) typedArray.getDimension(R.styleable.ShadowLayout_sl_shadow_blur, dip2px(8));
+        shadowRound = (int) typedArray.getDimension(R.styleable.ShadowLayout_sl_shadow_round, dip2px(0));
+        shadowOffsetLeft = (int) typedArray.getDimension(R.styleable.ShadowLayout_sl_shadow_offset_left, DEFAULT_SHADOW_OFFSET);
+        shadowOffsetTop = (int) typedArray.getDimension(R.styleable.ShadowLayout_sl_shadow_offset_top, DEFAULT_SHADOW_OFFSET);
+        shadowOffsetRight = (int) typedArray.getDimension(R.styleable.ShadowLayout_sl_shadow_offset_right, DEFAULT_SHADOW_OFFSET);
+        shadowOffsetBottom = (int) typedArray.getDimension(R.styleable.ShadowLayout_sl_shadow_offset_bottom, DEFAULT_SHADOW_OFFSET);
+        shadowOffsetDx = (int) typedArray.getDimension(R.styleable.ShadowLayout_sl_shadow_offset_dx, 0);
+        shadowOffsetDy = (int) typedArray.getDimension(R.styleable.ShadowLayout_sl_shadow_offset_dy, 0);
         typedArray.recycle();
 
-        shadowColor = getDarkerColor(shadowColor);
+        if (shadowAutoDarken) {
+            shadowPaintColor = getDarkerColor(shadowColor);
+        } else {
+            shadowPaintColor = shadowColor;
+        }
 
         shadowPaint = new Paint();
         shadowPaint.setColor(Color.WHITE);
         shadowPaint.setStyle(Paint.Style.FILL);
         shadowPaint.setAntiAlias(true);
-        shadowPaint.setShadowLayer(shadowRadius, 0, 0, shadowColor);
+        shadowPaint.setShadowLayer(shadowBlur, shadowOffsetDx, shadowOffsetDy, shadowPaintColor);
 
         setLayerType(LAYER_TYPE_SOFTWARE, null);
     }
@@ -75,13 +86,19 @@ public class ShadowLayout extends FrameLayout {
     protected void dispatchDraw(Canvas canvas) {
         if (shadowRect == null) {
             shadowRect = new RectF();
-            shadowRect.left = getPaddingLeft() + shadowLeftOffset;
-            shadowRect.top = getPaddingTop() + shadowTopOffset;
-            shadowRect.right = getWidth() - getPaddingRight() - shadowRightOffset;
-            shadowRect.bottom = getHeight() - getPaddingBottom() - shadowBottomOffset;
+            shadowRect.left = getPaddingLeft() + shadowOffsetLeft;
+            shadowRect.top = getPaddingTop() + shadowOffsetTop;
+            shadowRect.right = getWidth() - getPaddingRight() - shadowOffsetRight;
+            shadowRect.bottom = getHeight() - getPaddingBottom() - shadowOffsetBottom;
         }
-        canvas.drawRoundRect(shadowRect, shadowCorner, shadowCorner, shadowPaint);
+        canvas.drawRoundRect(shadowRect, shadowRound, shadowRound, shadowPaint);
         super.dispatchDraw(canvas);
+    }
+
+    private float dip2px(float dpValue) {
+        DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+        float scale = dm.density;
+        return (int) (dpValue * scale + 0.5F);
     }
 
     private static int getDarkerColor(int color) {
@@ -92,50 +109,72 @@ public class ShadowLayout extends FrameLayout {
         return Color.HSVToColor(hsv);
     }
 
-    private float dip2px(float dpValue) {
-        DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
-        float scale = dm.density;
-        return (int) (dpValue * scale + 0.5F);
-    }
-
     public void setShadowColor(@ColorInt int color) {
-        this.shadowColor = getDarkerColor(color);
-        shadowPaint.setShadowLayer(shadowRadius, 0, 0, shadowColor);
+        shadowColor = color;
+        if (shadowAutoDarken) {
+            shadowPaintColor = getDarkerColor(shadowColor);
+        } else {
+            shadowPaintColor = shadowColor;
+        }
+        shadowPaint.setShadowLayer(shadowBlur, shadowOffsetDx, shadowOffsetDy, shadowPaintColor);
         invalidate();
     }
 
-    public void setShadowRadius(int depth) {
-        shadowRadius = depth;
-        shadowPaint.setShadowLayer(shadowRadius, 0, 0, shadowColor);
+    public void setShadowAutoDarken(boolean darken) {
+        shadowAutoDarken = darken;
+        if (shadowAutoDarken) {
+            shadowPaintColor = getDarkerColor(shadowColor);
+        } else {
+            shadowPaintColor = shadowColor;
+        }
+        shadowPaint.setShadowLayer(shadowBlur, shadowOffsetDx, shadowOffsetDy, shadowPaintColor);
         invalidate();
     }
 
-    public void setShadowCorner(int round) {
-        shadowCorner = round;
+    public void setShadowBlur(int blur) {
+        shadowBlur = blur;
+        shadowPaint.setShadowLayer(shadowBlur, shadowOffsetDx, shadowOffsetDy, shadowPaintColor);
         invalidate();
     }
 
-    public void setShadowLeftOffset(int offset) {
-        shadowLeftOffset = offset;
-        shadowRect.left = getPaddingLeft() + shadowLeftOffset;
+    public void setShadowRound(int round) {
+        shadowRound = round;
         invalidate();
     }
 
-    public void setShadowRightOffset(int offset) {
-        shadowRightOffset = offset;
-        shadowRect.right = getWidth() - getPaddingRight() - shadowRightOffset;
+    public void setShadowOffsetDx(int offset) {
+        shadowOffsetDx = offset;
+        shadowPaint.setShadowLayer(shadowBlur, shadowOffsetDx, shadowOffsetDy, shadowPaintColor);
         invalidate();
     }
 
-    public void setShadowTopOffset(int offset) {
-        shadowTopOffset = offset;
-        shadowRect.top = getPaddingTop() + shadowTopOffset;
+    public void setShadowOffsetDy(int offset) {
+        shadowOffsetDy = offset;
+        shadowPaint.setShadowLayer(shadowBlur, shadowOffsetDx, shadowOffsetDy, shadowPaintColor);
         invalidate();
     }
 
-    public void setShadowBottomOffset(int offset) {
-        shadowBottomOffset = offset;
-        shadowRect.bottom = getHeight() - getPaddingBottom() - shadowBottomOffset;
+    public void setShadowOffsetLeft(int offset) {
+        shadowOffsetLeft = offset;
+        shadowRect.left = getPaddingLeft() + shadowOffsetLeft;
+        invalidate();
+    }
+
+    public void setShadowOffsetRight(int offset) {
+        shadowOffsetRight = offset;
+        shadowRect.right = getWidth() - getPaddingRight() - shadowOffsetRight;
+        invalidate();
+    }
+
+    public void setShadowOffsetTop(int offset) {
+        shadowOffsetTop = offset;
+        shadowRect.top = getPaddingTop() + shadowOffsetTop;
+        invalidate();
+    }
+
+    public void setShadowOffsetBottom(int offset) {
+        shadowOffsetBottom = offset;
+        shadowRect.bottom = getHeight() - getPaddingBottom() - shadowOffsetBottom;
         invalidate();
     }
 }
