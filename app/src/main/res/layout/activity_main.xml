@@ -8,31 +8,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
-
-        <com.fbsum.shadowlayout.ShadowLayout
-            android:id="@+id/shadowLayout"
-            android:layout_width="match_parent"
-            android:layout_height="96dp"
-            android:padding="20dp"
-            app:sl_shadow_radius="8dp">
-
-        </com.fbsum.shadowlayout.ShadowLayout>
+        android:padding="20dp">
 
         <com.fbsum.shadowlayout.ShadowLayout
             android:id="@+id/coloredShadowLayout"
             android:layout_width="match_parent"
             android:layout_height="96dp"
             android:padding="20dp"
+            app:sl_shadow_blur="8dp"
             app:sl_shadow_color="@color/colorAccent"
-            app:sl_shadow_radius="8dp">
+            app:sl_shadow_round="8dp">
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/roundedImageView"
+            <com.coorchice.library.SuperTextView
+                android:id="@+id/superTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:src="@color/colorAccent" />
+                app:corner="8dp"
+                app:solid="@color/colorAccent" />
 
         </com.fbsum.shadowlayout.ShadowLayout>
 
@@ -40,13 +32,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:alignmentMode="alignBounds"
-            android:columnCount="2"
+            android:columnCount="3"
             android:useDefaultMargins="true">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="child view" />
+                android:text="Color" />
+
+            <ImageView
+                android:id="@+id/colorImageView"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@color/colorAccent"
+                android:contentDescription="@null" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show child view" />
 
             <CheckBox
                 android:id="@+id/showChildCheckBox"
@@ -54,84 +62,178 @@
                 android:layout_height="wrap_content"
                 android:checked="true" />
 
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Auto darken" />
+
+            <CheckBox
+                android:id="@+id/autoDarkenCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Radius" />
+                android:text="Blur" />
 
             <SeekBar
-                android:id="@+id/radiusSeekBar"
-                android:layout_width="200dp"
+                android:id="@+id/blurSeekBar"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:max="50"
+                android:max="24"
                 android:progress="8" />
 
             <TextView
+                android:id="@+id/blurTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Corner" />
-
-            <SeekBar
-                android:id="@+id/cornerSeekBar"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:max="50" />
+                android:text="8" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Left Offset" />
+                android:text="Round" />
+
+            <SeekBar
+                android:id="@+id/roundSeekBar"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:max="24"
+                android:progress="8" />
+
+            <TextView
+                android:id="@+id/roundTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Offset Left" />
 
             <SeekBar
                 android:id="@+id/leftOffsetSeekBar"
-                android:layout_width="200dp"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:max="50" />
+                android:max="24" />
+
+            <TextView
+                android:id="@+id/leftOffsetTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Right Offset" />
+                android:text="Offset Right" />
 
             <SeekBar
                 android:id="@+id/rightOffsetSeekBar"
-                android:layout_width="200dp"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:max="50" />
+                android:max="24" />
+
+            <TextView
+                android:id="@+id/rightOffsetTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Top Offset" />
+                android:text="Offset Top" />
 
             <SeekBar
                 android:id="@+id/topOffsetSeekBar"
-                android:layout_width="200dp"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:max="50" />
+                android:max="24" />
+
+            <TextView
+                android:id="@+id/topOffsetTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Bottom Offset" />
+                android:text="Offset Bottom" />
 
             <SeekBar
                 android:id="@+id/bottomOffsetSeekBar"
-                android:layout_width="200dp"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:max="50" />
+                android:max="24" />
+
+            <TextView
+                android:id="@+id/bottomOffsetTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Offset Dx" />
+
+            <SeekBar
+                android:id="@+id/dxOffsetSeekBar"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:max="24" />
+
+            <TextView
+                android:id="@+id/dxOffsetTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Offset Dy" />
+
+            <SeekBar
+                android:id="@+id/dyOffsetSeekBar"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:max="24" />
+
+            <TextView
+                android:id="@+id/dyOffsetTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
 
         </GridLayout>
 
