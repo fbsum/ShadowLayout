@@ -1,6 +1,6 @@
 # ShadowLayout
 
-![](https://raw.githubusercontent.com/fbsum/ShadowLayout/master/art/shadowlayout.png)
+![](https://raw.githubusercontent.com/fbsum/ShadowLayout/master/art/shadowlayout.jpg)
 
 ## Dependencies
 
@@ -18,20 +18,20 @@ Step 2. Add the dependency:
 
 ```groovy
     dependencies {
-            compile 'com.github.fbsum:shadowlayout:1.0.0'
+            compile 'com.github.fbsum:shadowlayout:1.1.0'
     }
 ```
 
 ## Implement
 
 ```java
-	private void init() {
-		// ...
+    private void init() {
+        // ...
         shadowPaint = new Paint();
         shadowPaint.setColor(Color.WHITE);
         shadowPaint.setStyle(Paint.Style.FILL);
         shadowPaint.setAntiAlias(true);
-        shadowPaint.setShadowLayer(shadowRadius, 0, 0, shadowColor);
+        shadowPaint.setShadowLayer(shadowBlur, shadowOffsetDx, shadowOffsetDy, shadowPaintColor);
 
         setLayerType(LAYER_TYPE_SOFTWARE, null);
     }
@@ -40,13 +40,13 @@ Step 2. Add the dependency:
     protected void dispatchDraw(Canvas canvas) {
         if (shadowRect == null) {
             shadowRect = new RectF();
-            shadowRect.left = getPaddingLeft() + shadowLeftOffset;
-            shadowRect.top = getPaddingTop() + shadowTopOffset;
-            shadowRect.right = getWidth() - getPaddingRight() - shadowRightOffset;
-            shadowRect.bottom = getHeight() - getPaddingBottom() - shadowBottomOffset;
+            shadowRect.left = getPaddingLeft() + shadowOffsetLeft;
+            shadowRect.top = getPaddingTop() + shadowOffsetTop;
+            shadowRect.right = getWidth() - getPaddingRight() - shadowOffsetRight;
+            shadowRect.bottom = getHeight() - getPaddingBottom() - shadowOffsetBottom;
         }
-        canvas.drawRoundRect(shadowRect, shadowCorner, shadowCorner, shadowPaint);
+        canvas.drawRoundRect(shadowRect, shadowRound, shadowRound, shadowPaint);
         super.dispatchDraw(canvas);
     }
 ```
-## [Debug APK](https://raw.githubusercontent.com/fbsum/ShadowLayout/master/art/shadowlayout_v1.0.0.apk)
+## [Debug APK](https://raw.githubusercontent.com/fbsum/ShadowLayout/master/art/shadowlayout_v1.1.0.apk)
