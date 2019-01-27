@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                     .initialColor(resources.getColor(R.color.colorAccent))
                     .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                     .density(12)
+                    .lightnessSliderOnly()
                     .setPositiveButton("ok") { dialog, selectedColor, allColors ->
                         colorImageView.setBackgroundColor(selectedColor)
                         superTextView.setSolid(selectedColor)
