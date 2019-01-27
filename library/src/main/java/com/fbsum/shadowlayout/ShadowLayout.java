@@ -51,6 +51,7 @@ public class ShadowLayout extends FrameLayout {
     private int shadowOffsetDx;
     private int shadowOffsetDy;
     private int shadowPaintColor;
+    private boolean layoutChanged;
 
     private void init(@NonNull Context context, @Nullable AttributeSet attrs) {
 
@@ -83,9 +84,15 @@ public class ShadowLayout extends FrameLayout {
     }
 
     @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        layoutChanged = changed;
+    }
+
+    @Override
     protected void dispatchDraw(Canvas canvas) {
-        if (shadowRect == null) {
-            shadowRect = new RectF();
+        if (shadowRect == null || layoutChanged) {
+            shadowRect = shadowRect != null ? shadowRect : new RectF();
             shadowRect.left = getPaddingLeft() + shadowOffsetLeft;
             shadowRect.top = getPaddingTop() + shadowOffsetTop;
             shadowRect.right = getWidth() - getPaddingRight() - shadowOffsetRight;
